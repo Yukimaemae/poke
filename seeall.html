@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+ <head>
+   <meta charset="UTF-8">
+   
+   <link rel="stylesheet" href="./css/app.css">
+ </head>
+
+ <body>
+    <header>
+      <img id="logo" src="./img/pokemonlogo.png" alt="title" height="40px">
+        <h1>Poke Library</h1>
+           <ul>
+            <li><a href="./home.html">HOME</a></li>
+            <li><a href="./search.html">SEARCH</a></li>
+            <li><a href="./seeall.html">SEE ALL</a></li>
+           </ul>
+     </header>
+
+   <div class="container">
+   <ol id="pokedex"></ol>
+   </div>>
+   <div id="poke_container" class="poke_container"></div>
+   <div class="scroll-button"></div>
+ </body>
+
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script>
+const pokedex = document.getElementById("pokedex");
+
+console.log(pokedex);
+
+const fetchPokemon = () => {
+   const promises = [];
+   for(let i = 1; i < 899; i++) {
+   const url = `https:pokeapi.co/api/v2/pokemon/${i}`;
+   promises.push(fetch(url).then((res) => res.json()));
+   }
+
+   Promise.all(promises).then( results => {
+       console.log(results);
+       const pokemon = results.map((data) => ({
+           name: data.name,
+           id: data.id,
+           image: data.sprites['front_default'],
+           type: data.types.map((type) => type.type.name).join(', ')
+       }));
+       displayPokemon(pokemon);
+   });
+};
+
+const displayPokemon = (pokemon) => {
+   console.log(pokemon);
+   const pokemonHTNLString = pokemon.map( pokemon => `
+   <li class="card">
+       <img class="card-image" src="${pokemon.image}"/> 
+       <h2 class="card-title">${pokemon.id}. ${pokemon.name}</h2>
+       <p class="card-subtitle">Type: ${pokemon.type}</p>
+   </li>
+   `).join('');
+   pokedex.innerHTML = pokemonHTNLString;
+};
+
+fetchPokemon();
+
+$(function(){
+  var $scroll_button = $(".scroll-button");
+  $(window).scroll(function(){
+    var scrollTop = $(window).scrollTop();
+    if(scrollTop > $(window).height()){
+      $scroll_button.css("opacity", ".7");
+    }else{
+      $scroll_button.css("opacity", "0");
+    }
+  });
+  $scroll_button.click(function(){
+    $("html,body").animate({scrollTop: 0}, 500, "swing");
+  });
+});
+
+</script>
+</html>

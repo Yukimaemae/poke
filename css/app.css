@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css?family=Lato:300,400&display=swap');
+
+* {
+   box-sizing: border-box;
+}
+
+body {
+   background: radial-gradient(#fff3b8, #e9bc00 ) 
+   fixed;
+}
+
+ 
+header{
+  display: flex;
+  height: 64px;
+  position: relative;
+  top: 0px auto;
+  background-color: rgb(243, 163, 16);
+  width: 100% auto;
+  text-align: center;
+  align-items: center;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25);
+}
+ 
+a {
+    display: flex;
+    color: #fff;
+	text-transform: uppercase;
+}
+ 
+ul {
+    
+	overflow:hidden;
+	list-style:none;
+	margin: 10px auto;
+	z-index: 20;
+ 
+}
+ 
+ul li {
+  display: inline-block;
+  margin: 0 0 0 50px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-size: 21px;
+  background-color:#fcc800;
+  padding-right: 5px;
+  padding-left: 5PX;
+  width: 80px auto;
+
+}
+ 
+ul li:hover {
+  -webkit-transform-origin: left top;
+  -ms-transform-origin: left top;
+  transform-origin: left top;
+  -webkit-transform: scale(1, 1);
+  -ms-transform: scale(1, 1);
+  transform: scale(1, 1)
+}
+
+h1 {
+   letter-spacing: 3px;
+}
+
+.card {
+   scroll-snap-type: y;
+   list-style: none;
+   padding: 40px;
+   background-color: #ffffff ;
+   color: #000000 ;
+   display: grid;
+   border-radius: 50%;
+}
+
+
+.card-title {
+   text-transform: uppercase;
+   font-size: 32px;
+   font-weight: normal;
+   margin-bottom: 0;;
+   text-align: center;
+}
+
+.card-subtitle {
+   font-weight: lighter;
+   color: #000000 ;
+   margin-top: 5px;
+   text-align: center;
+}
+
+.card-image {
+   height: 180px;
+   margin: 0 auto;
+}
+ #pokedex  {
+   padding-inline-start: 0;
+   display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+   grid-gap: 20px;
+}
+
+.container {
+   padding: 40px;
+   margin: 0 auto;
+}
+
+h1 {
+    color:#fff;
+   text-transform: uppercase;
+   text-align: left;
+   font-size: 40px;
+}
+
+.scroll-button {
+    z-index: 1;
+    background-color: #5f5f5f;
+    border-radius: 27px;
+    border: 2px solid #efefef;
+    box-shadow: #848484 0px 0px 3px 1px;
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    opacity: 0;
+    transition: opacity .3s linear;
+  }
+  .scroll-button:before {
+    content: "";
+    width: 18px;
+    height: 24px;
+    position: absolute;
+    top: 16px;
+    left: 15px;
+    background-color: white;
+  }
+    .scroll-button:after {
+    content: "";
+    border-width: 16px;
+    border-style: solid;
+    border-left-color: transparent;
+    border-right-color: #ff000000;
+    border-bottom-color: white;
+    border-top-color: #ff000000;
+    position: absolute;
+    top: -10px;
+    left: 7px;
+  }
