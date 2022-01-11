@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tracking polyline Draw(Beta).</title>
+<link rel="stylesheet" href="./css/venture.css">
+</head>
+<body>
+
+  <header>
+    <img id="logo" src="./img/pokemonlogo.png" alt="title" height="40px">
+    <h1>Poke Library</h1>
+       <ul>
+           <li><a href="./home.html">HOME</a></li>
+           <li><a href="./venture.html">POKEVENTURE</a></li>
+           <li><a href="./search.html">SEARCH</a></li>
+           <li><a href="./seeall.html">SEE ALL</a></li>
+
+       </ul>
+ </header>
+　<p>地名を入力してね</p> 
+ <p><input type="text" id="from" value="Seattle"> <button id="get">検索</button></p>
+ <div id="myMap" style="margin-left:20%;position:relative;width:60%;height:400px;"></div>
+
+  <div class="search">
+  <p>ポケモンを探してみる</p>
+    <button id="start" type="text" value="">SEARCH</button>
+  </div> 
+  <div class="container">
+    <ol id="pokedex"></ol>
+    </div>>
+    <div id="poke_container" class="poke_container"></div>
+
+<script src="./js/jquery-3.5.1.min.js"></script>
+<!-- [ Pushpin Object ] https://msdn.microsoft.com/en-us/library/mt712673.aspx -->
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=Aq_RKcyzMF4wPhWqvfcQS2h9a8cERYeHVuaHx7DeCUNurNqGZY3Ur7Yd4BETV9PW ' async defer></script>
+
+<script src="./js/BmapQuery.js"></script>
+
+<script>
+    /**
+     * BingMapsControllerを読み込んだらGetMap()を実行
+     * @constructor
+     */
+    let map;             //MapObject用
+    let searchManager;   //SearchObject用
+    function GetMap() {
+        //Map生成
+        map = new Microsoft.Maps.Map('#myMap', {
+            zoom: 15,
+            mapTypeId: Microsoft.Maps.MapTypeId.aerial
+        });
+        //検索モジュール指定
+        Microsoft.Maps.loadModule('Microsoft.Maps.Search', function () {
+            //searchManagerインスタンス化（Geocode,ReverseGeocodeが使用可能になる）
+            searchManager = new Microsoft.Maps.Search.SearchManager(map);
+            //Geocode：住所から検索
+            geocodeQuery(document.getElementById("from").value);
+        });
+    }
+
+    /**
+     * 検索ボタン[Click:Event]
+     */
+    document.getElementById("get").onclick = function(){
+        //4.Geocode:住所から検索
+        geocodeQuery(document.getElementById("from").value);
+    };
+
+    /**
+     * 住所から緯度経度を取得
+     * @param query [住所文字列]
+     */
+    function geocodeQuery(query) {
+        if(searchManager) {
+            //住所から緯度経度を検索
+            searchManager.geocode({
+                where: query,       //検索文字列
+                callback: function (r) { //検索結果を"( r )" の変数で取得
+                    //最初の検索取得結果をMAPに表示
+                    if (r && r.results && r.results.length > 0) {
+                        //Pushpinを立てる
+                        const pin = new Microsoft.Maps.Pushpin(r.results[0].location);
+                        map.entities.push(pin);
+                        //map表示位置を再設定
+                        map.setView({ bounds: r.results[0].bestView});
+                        //取得た緯度経度をh1要素にJSON文字列にして表示
+                        console.log(r.results[0].location);
+                        document.getElementById("h1").innerText = JSON.stringify(r.results[0].location);
+
+
+                    }
+                },
+                errorCallback: function (e) {
+                    alert("見つかりません");
+                }
+            });
+        }
+    }
+
+
+//pokemon
+const pokedex = document.getElementById("pokedex");
+console.log(pokedex);
+
+document.getElementById("start").onclick = function() {
+  var i = Math.floor( Math.random() * 901 ) ;
+  console.log(i);
+
+  const url = `https://pokeapi.co/api/v2/pokemon/${i}`;
+  console.log(url);
+
+  const fetchPokemon = () => {
+  const promises = [];
+  promises.push(fetch(url).then((res) => res.json()));
+  Promise.all(promises).then( results => {
+    console.log(results);
+    const pokemon = results.map((data) => ({
+         name: data.name,
+         id: data.id,
+         image: data.sprites['front_default'],
+         type: data.types.map((type) => type.type.name).join(', ')
+    }));
+       displayPokemon(pokemon);
+   });
+
+  };
+   
+  const displayPokemon = (pokemon) => {
+   console.log(pokemon);
+   const pokemonHTNLString = pokemon.map( pokemon => `
+   <li class="card">
+       <img class="card-image" src="${pokemon.image}"/> 
+       <h2 class="card-title">${pokemon.id}. ${pokemon.name}</h2>
+       <p class="card-subtitle">Type: ${pokemon.type}</p>
+   </li>
+   `).join('');
+   pokedex.innerHTML = pokemonHTNLString;
+};
+
+fetchPokemon();
+
+
+};
+
+
+
+</script>
+</body>
+
+</html>
